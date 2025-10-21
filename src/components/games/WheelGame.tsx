@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -10,13 +10,15 @@ interface WheelGameProps {
   playerName: string;
 }
 
-const wheelSegments = ['Lose', 'Lose', 'Lose', 'Lose', 'Lose', '1.5x', '2.0x', '1.2x', '1.7x'];
+const baseSegments = ['Lose', 'Lose', 'Lose', 'Lose', 'Lose', '1.5x', '2.0x', '1.2x', '1.7x'];
 
 export const WheelGame = ({ coins, setCoins }: WheelGameProps) => {
   const [bet, setBet] = useState(10);
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [result, setResult] = useState('');
+  const [displaySegments, setDisplaySegments] = useState<string[]>(baseSegments);
+  const [wonSegment, setWonSegment] = useState<string>('');
 
   const shuffleArray = <T,>(array: T[]): T[] => {
     const arr = [...array];
@@ -40,30 +42,51 @@ export const WheelGame = ({ coins, setCoins }: WheelGameProps) => {
     setCoins(coins - bet);
     setSpinning(true);
     setResult('');
+    setWonSegment('');
 
     // Shuffle segments for each spin
-    const shuffled = shuffleArray(wheelSegments);
+    const shuffled = shuffleArray(baseSegments);
+    setDisplaySegments(shuffled);
+    
     const spinIndex = Math.floor(Math.random() * shuffled.length);
     const segment = shuffled[spinIndex];
     
-    const baseRotation = 360 * 5 + (spinIndex * (360 / shuffled.length));
+    // Longer spin: 6 full rotations + position
+    const baseRotation = 360 * 8 + (spinIndex * (360 / shuffled.length));
     setRotation(baseRotation);
 
+    const wheel = document.getElementById('wheel-spinner');
+    if (wheel) {
+      wheel.style.transition = 'transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+    }
+
     setTimeout(() => {
-      setSpinning(false);
-      
-      if (segment === 'Lose') {
-        setResult(`Lost ${bet} coins`);
-        toast.error('You lost!');
-      } else {
-        const multiplier = parseFloat(segment.replace('x', ''));
-        const winAmount = Math.round(bet * multiplier);
-        setCoins(coins - bet + winAmount);
-        setResult(`Won ${winAmount} coins (${segment})`);
-        toast.success(`You won ${winAmount} coins!`);
+      if (wheel) {
+        wheel.style.transition = '';
       }
-    }, 3000);
+      setWonSegment(segment);
+      evaluateWheelResult(segment, bet);
+      setSpinning(false);
+    }, 5000);
   };
+
+  const evaluateWheelResult = (segment: string, bet: number) => {
+    if (segment === 'Lose') {
+      setResult(`Landed on: ${segment} — Lost ${bet} coins`);
+      toast.error('You lost!');
+    } else {
+      const multiplier = parseFloat(segment.replace('x', ''));
+      const winAmount = Math.round(bet * multiplier);
+      setCoins(coins - bet + winAmount);
+      setResult(`Landed on: ${segment} — Won ${winAmount} coins!`);
+      toast.success(`You won ${winAmount} coins!`);
+    }
+  };
+
+  useEffect(() => {
+    // Initial shuffle
+    setDisplaySegments(shuffleArray(baseSegments));
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -75,19 +98,21 @@ export const WheelGame = ({ coins, setCoins }: WheelGameProps) => {
       <div className="flex flex-col lg:flex-row gap-8 items-center">
         <div className="relative flex flex-col items-center gap-4">
           <div 
-            className="w-64 h-64 rounded-full border-8 border-primary/30 glow-border transition-transform duration-[3000ms] ease-out relative overflow-hidden"
+            id="wheel-spinner"
+            className="w-64 h-64 rounded-full border-8 border-primary/30 glow-border transition-transform duration-[5000ms] ease-out relative overflow-hidden"
             style={{ 
               transform: `rotate(${rotation}deg)`,
               background: 'conic-gradient(from 0deg, hsl(var(--card)) 0%, hsl(var(--primary) / 0.1) 100%)'
             }}
           >
             {/* Wheel segments with labels */}
-            {wheelSegments.map((segment, index) => {
-              const angle = (360 / wheelSegments.length) * index;
+            {displaySegments.map((segment, index) => {
+              const angle = (360 / displaySegments.length) * index;
               const isLose = segment === 'Lose';
+              const isWinner = wonSegment === segment && index === displaySegments.findIndex(s => s === wonSegment);
               return (
                 <div
-                  key={index}
+                  key={`${segment}-${index}`}
                   className="absolute w-full h-full flex items-start justify-center"
                   style={{
                     transform: `rotate(${angle}deg)`,
@@ -95,8 +120,12 @@ export const WheelGame = ({ coins, setCoins }: WheelGameProps) => {
                   }}
                 >
                   <div 
-                    className={`text-xs font-bold mt-4 px-2 py-1 rounded ${
-                      isLose ? 'text-destructive bg-destructive/10' : 'text-primary bg-primary/10'
+                    className={`text-xs font-bold mt-4 px-2 py-1 rounded transition-all duration-300 ${
+                      isWinner 
+                        ? 'text-primary bg-primary/30 scale-125 animate-pulse' 
+                        : isLose 
+                          ? 'text-destructive bg-destructive/10' 
+                          : 'text-primary bg-primary/10'
                     }`}
                     style={{ transform: 'rotate(0deg)' }}
                   >
@@ -146,7 +175,9 @@ export const WheelGame = ({ coins, setCoins }: WheelGameProps) => {
           </Button>
 
           {result && (
-            <div className={`text-center p-4 rounded-lg glass-panel ${result.includes('Won') ? 'text-primary' : 'text-destructive'} font-bold`}>
+            <div className={`text-center p-4 rounded-lg glass-panel font-bold ${
+              result.includes('Won') ? 'text-primary animate-pulse' : 'text-destructive'
+            }`}>
               {result}
             </div>
           )}
