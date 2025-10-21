@@ -73,24 +73,52 @@ export const WheelGame = ({ coins, setCoins }: WheelGameProps) => {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8 items-center">
-        <div className="relative">
+        <div className="relative flex flex-col items-center gap-4">
           <div 
-            className="w-64 h-64 rounded-full border-8 border-primary/30 glow-border transition-transform duration-[3000ms] ease-out"
+            className="w-64 h-64 rounded-full border-8 border-primary/30 glow-border transition-transform duration-[3000ms] ease-out relative overflow-hidden"
             style={{ 
               transform: `rotate(${rotation}deg)`,
               background: 'conic-gradient(from 0deg, hsl(var(--card)) 0%, hsl(var(--primary) / 0.1) 100%)'
             }}
           >
+            {/* Wheel segments with labels */}
+            {wheelSegments.map((segment, index) => {
+              const angle = (360 / wheelSegments.length) * index;
+              const isLose = segment === 'Lose';
+              return (
+                <div
+                  key={index}
+                  className="absolute w-full h-full flex items-start justify-center"
+                  style={{
+                    transform: `rotate(${angle}deg)`,
+                    transformOrigin: 'center center'
+                  }}
+                >
+                  <div 
+                    className={`text-xs font-bold mt-4 px-2 py-1 rounded ${
+                      isLose ? 'text-destructive bg-destructive/10' : 'text-primary bg-primary/10'
+                    }`}
+                    style={{ transform: 'rotate(0deg)' }}
+                  >
+                    {segment}
+                  </div>
+                </div>
+              );
+            })}
+            
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-4xl mb-2">🎰</div>
-                <div className="text-xs text-muted-foreground">Spin!</div>
+              <div className="text-center bg-card/80 rounded-full w-20 h-20 flex items-center justify-center">
+                <div className="text-3xl">🎰</div>
               </div>
             </div>
           </div>
           
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-10">
             <div className="w-4 h-8 bg-primary rounded-b-full glow-border shadow-lg shadow-primary/50" />
+          </div>
+          
+          <div className="text-sm text-muted-foreground bg-muted/20 px-4 py-2 rounded-lg">
+            Segments shuffle each spin!
           </div>
         </div>
 
