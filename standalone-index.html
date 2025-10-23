@@ -153,7 +153,7 @@
             border: 8px solid rgba(0, 191, 255, 0.3);
             box-shadow: 0 0 20px rgba(0, 191, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.03);
             position: relative;
-            transition: transform 8s cubic-bezier(0.17, 0.67, 0.05, 1);
+            transition: transform 10s cubic-bezier(0.17, 0.67, 0.05, 1);
         }
 
         .wheel-segment {
@@ -206,15 +206,15 @@
         .wheel-pointer {
             position: absolute;
             top: 50%;
-            right: -20px;
+            right: -25px;
             transform: translateY(-50%);
             width: 0;
             height: 0;
-            border-top: 20px solid transparent;
-            border-bottom: 20px solid transparent;
-            border-left: 30px solid hsl(193, 100%, 50%);
+            border-top: 25px solid transparent;
+            border-bottom: 25px solid transparent;
+            border-left: 35px solid hsl(193, 100%, 50%);
             z-index: 20;
-            filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.8));
+            filter: drop-shadow(0 0 15px rgba(0, 191, 255, 0.9));
         }
 
         .result-box {
@@ -464,20 +464,21 @@
             const wheel = document.getElementById('wheel');
             
             // Calculate rotation - pointer is on the RIGHT
-            // Each segment is (360 / 9) = 40 degrees
             const degreesPerSegment = 360 / currentSegments.length;
             
-            // To land on the RIGHT (where pointer is), we need to rotate so the winning segment
-            // is at 0 degrees (3 o'clock position)
-            // Since segments start at top (12 o'clock = 90 degrees offset from right)
-            const targetAngle = -(winIndex * degreesPerSegment) + 90; // Add 90 to align with right pointer
+            // Pointer is at 0 degrees (right side)
+            // Segments are positioned starting from 0 degrees going clockwise
+            // To land segment at pointer: rotate wheel so segment ends up at 0 degrees (right)
+            // We need to account for the fact that segments are centered at their angle
+            const segmentOffset = degreesPerSegment / 2; // Center the segment on the pointer
+            const targetAngle = -(winIndex * degreesPerSegment) - segmentOffset;
             
-            // Add multiple full rotations for drama (10 full spins)
-            const totalRotation = 360 * 10 + targetAngle;
+            // Add many full rotations for longer, faster spin (15 full spins)
+            const totalRotation = 360 * 15 + targetAngle;
             
             wheel.style.transform = `rotate(${totalRotation}deg)`;
             
-            // Wait for spin to complete (8 seconds)
+            // Wait for spin to complete (10 seconds)
             setTimeout(() => {
                 // Highlight winner
                 const winnerLabel = document.getElementById(`segment-${winIndex}`);
@@ -497,7 +498,7 @@
                         winnerLabel.classList.remove('winner');
                     }
                 }, 3000);
-            }, 8000);
+            }, 10000);
         }
 
         function evaluateWheelResult(segment, bet) {
