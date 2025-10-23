@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Blue Arcade - Mini Casino Games</title>
+    <meta name="description" content="6 exciting mini casino games with neon aesthetics. Spin the wheel, play slots, roll dice and more!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: radial-gradient(ellipse at 20% 10%, rgba(0, 191, 255, 0.03), transparent 40%), 
+                        linear-gradient(180deg, hsl(215, 35%, 3%), hsl(215, 28%, 5%));
+            color: hsl(193, 100%, 88%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
+            backdrop-filter: blur(8px);
+            border: 1px solid hsl(193, 30%, 15%);
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .neon-text {
+            color: hsl(193, 100%, 50%);
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5), 0 0 20px rgba(0, 191, 255, 0.3);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .coins {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: hsl(193, 100%, 60%);
+        }
+
+        button {
+            background: linear-gradient(to right, hsl(193, 100%, 50%), hsl(193, 100%, 60%));
+            color: hsl(215, 40%, 10%);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .game-card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
+            backdrop-filter: blur(8px);
+            border: 1px solid hsl(193, 30%, 15%);
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-align: center;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+        }
+
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-title {
+            color: hsl(193, 100%, 50%);
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-view {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
+            backdrop-filter: blur(8px);
+            border: 1px solid hsl(193, 30%, 15%);
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 2rem;
+        }
+
+        input {
+            background: hsl(193, 30%, 12%);
+            border: 1px solid hsl(193, 30%, 15%);
+            color: hsl(193, 100%, 88%);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-family: 'Share Tech Mono', monospace;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .wheel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .wheel-wrapper {
+            position: relative;
+            width: 400px;
+            height: 400px;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid rgba(0, 191, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            position: relative;
+            transition: transform 8s cubic-bezier(0.17, 0.67, 0.05, 1);
+        }
+
+        .wheel-segment {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            transform-origin: center center;
+        }
+
+        .wheel-label {
+            margin-top: 1.5rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(0, 191, 255, 0.1);
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: bold;
+            color: hsl(193, 100%, 50%);
+        }
+
+        .wheel-label.lose {
+            background: rgba(239, 68, 68, 0.1);
+            color: hsl(0, 84%, 60%);
+        }
+
+        .wheel-label.winner {
+            background: rgba(0, 191, 255, 0.3);
+            animation: pulse 1s infinite;
+            transform: scale(1.2);
+        }
+
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            z-index: 10;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+            border-left: 30px solid hsl(193, 100%, 50%);
+            z-index: 20;
+            filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.8));
+        }
+
+        .result-box {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+
+        .result-win {
+            color: hsl(193, 100%, 50%);
+            animation: pulse 2s infinite;
+        }
+
+        .result-lose {
+            color: hsl(0, 84%, 60%);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            color: hsl(193, 100%, 50%);
+            margin-bottom: 1rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 191, 255, 0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: hsl(193, 100%, 88%);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <div class="neon-text">🎰 Neon Blue Arcade</div>
+                <div style="font-size: 0.875rem; margin-top: 0.25rem;">Player: <span id="playerNameDisplay">Guest</span></div>
+            </div>
+            <div class="coins">💰 <span id="coinsDisplay">2000</span> coins</div>
+            <button onclick="resetCoins()">Reset Coins</button>
+        </div>
+
+        <!-- Menu View -->
+        <div id="menuView">
+            <div class="game-grid">
+                <div class="game-card" onclick="selectGame('wheel')">
+                    <div class="game-icon">🎡</div>
+                    <div class="game-title">Spin the Wheel</div>
+                    <p style="font-size: 0.875rem; color: hsl(193, 40%, 65%);">Test your luck with random multipliers</p>
+                </div>
+                <div class="game-card" onclick="selectGame('slot')">
+                    <div class="game-icon">🎰</div>
+                    <div class="game-title">Slot Machine</div>
+                    <p style="font-size: 0.875rem; color: hsl(193, 40%, 65%);">Match symbols to win big</p>
+                </div>
+                <div class="game-card" onclick="selectGame('dice')">
+                    <div class="game-icon">🎲</div>
+                    <div class="game-title">Dice Roll</div>
+                    <p style="font-size: 0.875rem; color: hsl(193, 40%, 65%);">Roll the dice for fortune</p>
+                </div>
+                <div class="game-card" onclick="selectGame('cards')">
+                    <div class="game-icon">🃏</div>
+                    <div class="game-title">Card Draw</div>
+                    <p style="font-size: 0.875rem; color: hsl(193, 40%, 65%);">Draw high cards to win</p>
+                </div>
+                <div class="game-card" onclick="selectGame('randomizer')">
+                    <div class="game-icon">🔀</div>
+                    <div class="game-title">50/50 Randomizer</div>
+                    <p style="font-size: 0.875rem; color: hsl(193, 40%, 65%);">Double or nothing</p>
+                </div>
+                <div class="game-card" onclick="selectGame('highlow')">
+                    <div class="game-icon">📊</div>
+                    <div class="game-title">High or Low</div>
+                    <p style="font-size: 0.875rem; color: hsl(193, 40%, 65%);">Guess the next number</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wheel Game View -->
+        <div id="wheelView" class="game-view hidden">
+            <button class="back-btn" onclick="backToMenu()">← Back to Games</button>
+            <h2 class="neon-text" style="margin-bottom: 1rem;">🎡 Spin the Wheel</h2>
+            <p style="margin-bottom: 2rem; color: hsl(193, 40%, 65%);">Segments shuffle each spin! Land on a multiplier to win.</p>
+            
+            <div class="wheel-container">
+                <div class="wheel-wrapper">
+                    <div id="wheel" class="wheel"></div>
+                    <div class="wheel-center">🎰</div>
+                    <div class="wheel-pointer"></div>
+                </div>
+                
+                <div style="max-width: 400px; width: 100%;">
+                    <div class="form-group">
+                        <label for="wheelBet">Bet Amount</label>
+                        <input type="number" id="wheelBet" value="10" min="1">
+                    </div>
+                    <button onclick="spinWheel()" id="spinBtn" style="width: 100%; font-size: 1.125rem; padding: 1rem;">Spin Wheel</button>
+                    <div id="wheelResult" class="result-box hidden"></div>
+                    <p style="margin-top: 1rem; font-size: 0.75rem; color: hsl(193, 40%, 65%); background: rgba(255, 255, 255, 0.02); padding: 0.75rem; border-radius: 0.5rem;">
+                        <strong>Payouts:</strong> Segments include 5× Lose, 1.5x, 2.0x, 1.2x, 1.7x (shuffled each spin)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let coins = parseInt(localStorage.getItem('neon_coins') || '2000');
+        let playerName = localStorage.getItem('neon_player') || 'Guest';
+        let currentView = 'menu';
+        let isSpinning = false;
+
+        // Wheel segments
+        const baseSegments = ['Lose', 'Lose', 'Lose', 'Lose', 'Lose', '1.5x', '2.0x', '1.2x', '1.7x'];
+        let currentSegments = [...baseSegments];
+
+        // Initialize
+        updateDisplay();
+
+        function updateDisplay() {
+            document.getElementById('coinsDisplay').textContent = Math.max(0, Math.floor(coins));
+            document.getElementById('playerNameDisplay').textContent = playerName;
+            localStorage.setItem('neon_coins', Math.max(0, Math.floor(coins)).toString());
+        }
+
+        function resetCoins() {
+            coins = 2000;
+            updateDisplay();
+            showToast('Coins reset to 2000!');
+        }
+
+        function selectGame(game) {
+            currentView = game;
+            document.getElementById('menuView').classList.add('hidden');
+            document.getElementById('wheelView').classList.add('hidden');
+            
+            if (game === 'wheel') {
+                document.getElementById('wheelView').classList.remove('hidden');
+                initWheel();
+            } else {
+                showToast('Game coming soon!');
+                backToMenu();
+            }
+        }
+
+        function backToMenu() {
+            currentView = 'menu';
+            document.getElementById('menuView').classList.remove('hidden');
+            document.getElementById('wheelView').classList.add('hidden');
+        }
+
+        function showToast(message) {
+            alert(message);
+        }
+
+        // Shuffle array
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Initialize wheel
+        function initWheel() {
+            currentSegments = shuffleArray(baseSegments);
+            renderWheel();
+        }
+
+        // Render wheel segments
+        function renderWheel() {
+            const wheel = document.getElementById('wheel');
+            wheel.innerHTML = '';
+            
+            currentSegments.forEach((segment, index) => {
+                const angle = (360 / currentSegments.length) * index;
+                const segmentDiv = document.createElement('div');
+                segmentDiv.className = 'wheel-segment';
+                segmentDiv.style.transform = `rotate(${angle}deg)`;
+                
+                const label = document.createElement('div');
+                label.className = 'wheel-label' + (segment === 'Lose' ? ' lose' : '');
+                label.textContent = segment;
+                label.id = `segment-${index}`;
+                
+                segmentDiv.appendChild(label);
+                wheel.appendChild(segmentDiv);
+            });
+        }
+
+        // Spin the wheel
+        function spinWheel() {
+            if (isSpinning) return;
+            
+            const bet = parseInt(document.getElementById('wheelBet').value);
+            
+            if (!bet || bet <= 0) {
+                showToast('Enter a valid bet!');
+                return;
+            }
+            
+            if (bet > coins) {
+                showToast('Not enough coins!');
+                return;
+            }
+            
+            // Deduct bet
+            coins -= bet;
+            updateDisplay();
+            
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+            document.getElementById('wheelResult').classList.add('hidden');
+            
+            // Shuffle segments for new spin
+            currentSegments = shuffleArray(baseSegments);
+            renderWheel();
+            
+            // Pick winning segment
+            const winIndex = Math.floor(Math.random() * currentSegments.length);
+            const winSegment = currentSegments[winIndex];
+            
+            const wheel = document.getElementById('wheel');
+            
+            // Calculate rotation - pointer is on the RIGHT
+            // Each segment is (360 / 9) = 40 degrees
+            const degreesPerSegment = 360 / currentSegments.length;
+            
+            // To land on the RIGHT (where pointer is), we need to rotate so the winning segment
+            // is at 0 degrees (3 o'clock position)
+            // Since segments start at top (12 o'clock = 90 degrees offset from right)
+            const targetAngle = -(winIndex * degreesPerSegment) + 90; // Add 90 to align with right pointer
+            
+            // Add multiple full rotations for drama (10 full spins)
+            const totalRotation = 360 * 10 + targetAngle;
+            
+            wheel.style.transform = `rotate(${totalRotation}deg)`;
+            
+            // Wait for spin to complete (8 seconds)
+            setTimeout(() => {
+                // Highlight winner
+                const winnerLabel = document.getElementById(`segment-${winIndex}`);
+                if (winnerLabel) {
+                    winnerLabel.classList.add('winner');
+                }
+                
+                // Evaluate result
+                evaluateWheelResult(winSegment, bet);
+                
+                isSpinning = false;
+                document.getElementById('spinBtn').disabled = false;
+                
+                // Remove winner highlight after 3 seconds
+                setTimeout(() => {
+                    if (winnerLabel) {
+                        winnerLabel.classList.remove('winner');
+                    }
+                }, 3000);
+            }, 8000);
+        }
+
+        function evaluateWheelResult(segment, bet) {
+            const resultDiv = document.getElementById('wheelResult');
+            resultDiv.classList.remove('hidden');
+            
+            if (segment === 'Lose') {
+                resultDiv.className = 'result-box result-lose';
+                resultDiv.textContent = `Landed on: ${segment} — Lost ${bet} coins`;
+                showToast('You lost!');
+            } else {
+                const multiplier = parseFloat(segment.replace('x', ''));
+                const winAmount = Math.round(bet * multiplier);
+                coins += winAmount;
+                updateDisplay();
+                resultDiv.className = 'result-box result-win';
+                resultDiv.textContent = `Landed on: ${segment} — Won ${winAmount} coins!`;
+                showToast(`You won ${winAmount} coins!`);
+            }
+        }
+    </script>
+</body>
+</html>
