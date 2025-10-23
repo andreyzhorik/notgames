@@ -466,12 +466,10 @@
             // Calculate rotation - pointer is on the RIGHT
             const degreesPerSegment = 360 / currentSegments.length;
             
+            // Segments are rotated, labels appear at: (rotation - 90 degrees)
             // Pointer is at 0 degrees (right side)
-            // Segments are positioned starting from 0 degrees going clockwise
-            // To land segment at pointer: rotate wheel so segment ends up at 0 degrees (right)
-            // We need to account for the fact that segments are centered at their angle
-            const segmentOffset = degreesPerSegment / 2; // Center the segment on the pointer
-            const targetAngle = -(winIndex * degreesPerSegment) - segmentOffset;
+            // To align segment's label with pointer: wheel rotation = 90 - (segment rotation)
+            const targetAngle = 90 - (winIndex * degreesPerSegment);
             
             // Add many full rotations for longer, faster spin (15 full spins)
             const totalRotation = 360 * 15 + targetAngle;
