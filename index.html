@@ -139,20 +139,30 @@
   }
 
   /* wheel */
-  .wheel-wrapper{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .wheel-wrapper{display:flex;flex-direction:column;align-items:center;gap:14px;position:relative}
   .wheel{
     --size:360px;
     width:var(--size);height:var(--size);border-radius:50%;position:relative;border:8px solid rgba(0,191,255,0.08);
     box-shadow:inset 0 4px 24px rgba(0,191,255,0.06);
-    transition:transform 6s cubic-bezier(.17,.67,.05,1);
+    transition:transform 5s cubic-bezier(.17,.67,.05,1);
     overflow:visible;
     background:conic-gradient(from 0deg, rgba(0,191,255,0.06), rgba(0,191,255,0.02));
   }
-  .wheel .seg{position:absolute;left:50%;top:50%;transform-origin:center center;width:50%;height:50%;display:flex;align-items:flex-start;justify-content:center;padding-top:30px}
+  .wheel .seg{
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    padding-right:20px;
+  }
   .wheel .seg .label{padding:6px 10px;border-radius:6px;background:rgba(0,191,255,0.06);color:var(--neon-strong);font-weight:700;font-size:13px}
-  .pointer{position:absolute;right:-20px;top:50%;transform:translateY(-50%);width:0;height:0;border-top:12px solid transparent;border-bottom:12px solid transparent;border-left:20px solid var(--neon-strong);filter:drop-shadow(0 0 8px rgba(0,191,255,0.6));z-index:10}
+  .pointer{position:absolute;right:-16px;top:50%;transform:translateY(-50%);width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid var(--neon-strong);filter:drop-shadow(0 0 10px rgba(0,191,255,0.8));z-index:10}
 
-  .center-badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-size:22px;border:2px solid rgba(0,191,255,0.04);z-index:5}
+  .center-badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:rgba(10,20,40,0.95);display:flex;align-items:center;justify-content:center;font-size:28px;border:3px solid rgba(0,191,255,0.2);z-index:5}
 
   .result-box{margin-top:12px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.02);text-align:center;font-weight:800}
   .win{color:#9ff;font-shadow:0 0 8px rgba(0,191,255,0.3)}
@@ -285,10 +295,27 @@ function playLose(){ playTone(220,0.16,'sawtooth',0.06); }
 
 let musicPlaying=false;
 function startMusic(){
-  // Music disabled - was annoying
+  if(!soundOn) return;
+  ensureAudio();
+  if(musicNode) return;
+  const t = audioCtx;
+  const master = t.createGain(); master.gain.value=0.02; master.connect(t.destination);
+  // ambient pad with slow LFO
+  const osc1 = t.createOscillator(); osc1.type='sine'; osc1.frequency.value=220;
+  const osc2 = t.createOscillator(); osc2.type='triangle'; osc2.frequency.value=330;
+  const lfo = t.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.3;
+  const lfoGain = t.createGain(); lfoGain.gain.value=20;
+  lfo.connect(lfoGain); lfoGain.connect(osc1.frequency);
+  const g1 = t.createGain(); g1.gain.value=0.4;
+  osc1.connect(g1); osc2.connect(g1); g1.connect(master);
+  osc1.start(); osc2.start(); lfo.start();
+  musicNode = {osc1,osc2,lfo,g1,master};
+  musicPlaying=true;
 }
 function stopMusic(){
-  // Music disabled - was annoying
+  if(!musicNode) return;
+  try{musicNode.osc1.stop();musicNode.osc2.stop();musicNode.lfo.stop();}catch(e){}
+  musicNode=null; musicPlaying=false;
 }
 
 /* ---------------- UI Init ---------------- */
@@ -557,10 +584,12 @@ function renderWheel(container){
       seg.className='seg';
       const angle = (360 / n) * i;
       seg.style.transform = `rotate(${angle}deg)`;
+      seg.style.transformOrigin = 'center center';
       const label = document.createElement('div');
       label.className='label';
       label.id = `wseg-${i}`;
       label.textContent = s;
+      label.style.transform = `rotate(${-angle}deg)`; // counter-rotate to keep text upright
       if(s !== 'Lose') label.style.background = 'linear-gradient(90deg,#00bfff,#66e)';
       seg.appendChild(label);
       wheel.appendChild(seg);
