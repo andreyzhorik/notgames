@@ -1,522 +1,933 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Blue Arcade - Mini Casino Games</title>
-    <meta name="description" content="6 exciting mini casino games with neon aesthetics. Spin the wheel, play slots, roll dice and more!">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Neon Blue Arcade — All-in-One</title>
+<meta name="description" content="Neon Blue Arcade — 6 mini casino games with leaderboard." />
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#071024;
+    --bg2:#061322;
+    --neon:#00bfff;
+    --neon-strong:#00d6ff;
+    --muted:rgba(255,255,255,0.06);
+    --glass: rgba(255,255,255,0.03);
+    --accent1: linear-gradient(90deg,#00bfff,#5ef);
+    --card-radius:12px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:"Share Tech Mono", monospace;
+    background:
+      radial-gradient(ellipse at 10% 10%, rgba(0,191,255,0.03), transparent 35%),
+      linear-gradient(180deg,var(--bg1),var(--bg2));
+    color:#cfeffb;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:18px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+  }
 
-        body {
-            font-family: 'Share Tech Mono', monospace;
-            background: radial-gradient(ellipse at 20% 10%, rgba(0, 191, 255, 0.03), transparent 40%), 
-                        linear-gradient(180deg, hsl(215, 35%, 3%), hsl(215, 28%, 5%));
-            color: hsl(193, 100%, 88%);
-            min-height: 100vh;
-            padding: 1rem;
-        }
+  .app{
+    width:1100px;
+    max-width:calc(100% - 36px);
+    display:grid;
+    grid-template-columns: 320px 1fr;
+    gap:18px;
+  }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+  /* LEFT PANEL */
+  .panel {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    border-radius:var(--card-radius);
+    padding:18px;
+    border:1px solid rgba(0,191,255,0.08);
+    box-shadow:0 6px 30px rgba(0,191,255,0.04);
+    min-height:520px;
+  }
 
-        .header {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
-            backdrop-filter: blur(8px);
-            border: 1px solid hsl(193, 30%, 15%);
-            box-shadow: 0 0 20px rgba(0, 191, 255, 0.1);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            align-items: center;
-            justify-content: space-between;
-        }
+  .brand{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-bottom:14px;
+  }
+  .logo{
+    width:54px;height:54px;border-radius:10px;
+    background:linear-gradient(135deg,#052a3e,#003a59);
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;box-shadow:0 6px 18px rgba(0,191,255,0.08);
+    border:1px solid rgba(255,255,255,0.03);
+  }
+  .brand h1{font-size:18px;margin:0;color:var(--neon-strong);text-shadow:0 0 8px rgba(0,191,255,0.25)}
+  .brand p{margin:0;font-size:12px;color:rgba(255,255,255,0.6)}
 
-        .neon-text {
-            color: hsl(193, 100%, 50%);
-            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5), 0 0 20px rgba(0, 191, 255, 0.3);
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+  .balance{
+    margin:12px 0 18px 0;
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+  }
+  .coins{
+    font-size:20px;color:var(--neon);
+    display:flex;gap:8px;align-items:center;
+  }
+  .coin-btn{
+    background:transparent;border:1px solid rgba(0,191,255,0.12);
+    color:var(--neon);padding:8px 10px;border-radius:8px;cursor:pointer;
+  }
 
-        .coins {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: hsl(193, 100%, 60%);
-        }
+  .games-list{
+    display:grid;gap:10px;
+  }
+  .game-item{
+    display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.012), transparent);
+    border:1px solid rgba(0,191,255,0.04);
+    cursor:pointer;transition:transform .16s, box-shadow .16s;
+  }
+  .game-item:hover{transform:translateY(-4px); box-shadow:0 8px 30px rgba(0,191,255,0.04)}
+  .gi-icon{width:42px;height:42px;border-radius:8px;background:rgba(0,191,255,0.06);display:flex;align-items:center;justify-content:center;font-size:20px}
+  .gi-title{font-size:14px;color:var(--neon-strong)}
+  .gi-desc{font-size:11px;color:rgba(255,255,255,0.6)}
 
-        button {
-            background: linear-gradient(to right, hsl(193, 100%, 50%), hsl(193, 100%, 60%));
-            color: hsl(215, 40%, 10%);
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-family: 'Share Tech Mono', monospace;
-            font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
+  .leaderboard{
+    margin-top:14px;padding:10px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    border:1px solid rgba(0,191,255,0.04);
+  }
+  .leader-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .lb-list{display:grid;gap:6px;max-height:220px;overflow:auto;padding-right:6px}
+  .lb-row{display:flex;justify-content:space-between;padding:6px;border-radius:6px;background:rgba(255,255,255,0.015);font-size:13px}
 
-        button:hover {
-            opacity: 0.9;
-        }
+  /* RIGHT - content / game view */
+  .content{
+    min-height:520px;padding:18px;border-radius:var(--card-radius);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+    border:1px solid rgba(0,191,255,0.06);
+    box-shadow:0 8px 40px rgba(0,191,255,0.03);
+  }
 
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+  .content-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+  .content-header h2{color:var(--neon-strong);margin:0}
+  .subtle{color:rgba(255,255,255,0.6);font-size:13px}
 
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
+  .game-area{min-height:380px;display:flex;align-items:center;justify-content:center;padding:12px}
 
-        .game-card {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
-            backdrop-filter: blur(8px);
-            border: 1px solid hsl(193, 30%, 15%);
-            box-shadow: 0 0 20px rgba(0, 191, 255, 0.1);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-            text-align: center;
-        }
+  /* components */
+  .card{
+    width:100%;max-width:920px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    border-radius:10px;padding:16px;border:1px solid rgba(0,191,255,0.04);
+  }
+  .glass{backdrop-filter: blur(6px);}
 
-        .game-card:hover {
-            transform: scale(1.05);
-        }
+  .form-row{display:flex;gap:8px;align-items:center}
+  input[type=number], input[type=text]{
+    background: rgba(0,0,0,0.24);border:1px solid rgba(255,255,255,0.04);
+    color:#cfeffb;padding:8px;border-radius:8px;font-family:inherit;font-size:14px;min-width:120px;
+  }
+  button.primary{
+    background:var(--accent1);border:none;padding:10px 14px;border-radius:10px;color:#02202a;font-weight:700;cursor:pointer;
+    box-shadow:0 6px 18px rgba(0,191,255,0.08);
+  }
+  button.ghost{
+    background:transparent;border:1px solid rgba(255,255,255,0.04);color:#cfeffb;padding:8px 10px;border-radius:8px;cursor:pointer;
+  }
 
-        .game-icon {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-        }
+  /* wheel */
+  .wheel-wrapper{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .wheel{
+    --size:360px;
+    width:var(--size);height:var(--size);border-radius:50%;position:relative;border:8px solid rgba(0,191,255,0.08);
+    box-shadow:inset 0 4px 24px rgba(0,191,255,0.06);
+    transition:transform 6s cubic-bezier(.17,.67,.05,1);
+    overflow:visible;
+    background:conic-gradient(from 0deg, rgba(0,191,255,0.06), rgba(0,191,255,0.02));
+  }
+  .wheel .seg{position:absolute;left:50%;top:50%;transform-origin:0% 0%;width:50%;height:50%;display:flex;align-items:flex-end;justify-content:center}
+  .wheel .seg .label{padding:6px 10px;border-radius:6px;background:rgba(0,191,255,0.06);color:var(--neon-strong);font-weight:700}
+  .pointer{position:absolute;right:-42px;top:50%;transform:translateY(-50%);width:0;height:0;border-top:16px solid transparent;border-bottom:16px solid transparent;border-left:26px solid var(--neon-strong);filter:drop-shadow(0 0 8px rgba(0,191,255,0.6))}
 
-        .game-title {
-            color: hsl(193, 100%, 50%);
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
+  .center-badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-size:22px;border:2px solid rgba(0,191,255,0.04)}
 
-        .game-view {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
-            backdrop-filter: blur(8px);
-            border: 1px solid hsl(193, 30%, 15%);
-            box-shadow: 0 0 20px rgba(0, 191, 255, 0.1);
-            border-radius: 0.75rem;
-            padding: 2rem;
-        }
+  .result-box{margin-top:12px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.02);text-align:center;font-weight:800}
+  .win{color:#9ff;font-shadow:0 0 8px rgba(0,191,255,0.3)}
+  .lose{color:#ff9a9a}
 
-        input {
-            background: hsl(193, 30%, 12%);
-            border: 1px solid hsl(193, 30%, 15%);
-            color: hsl(193, 100%, 88%);
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            font-family: 'Share Tech Mono', monospace;
-            width: 100%;
-            margin-top: 0.5rem;
-        }
-
-        .wheel-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .wheel-wrapper {
-            position: relative;
-            width: 400px;
-            height: 400px;
-        }
-
-        .wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 8px solid rgba(0, 191, 255, 0.3);
-            box-shadow: 0 0 20px rgba(0, 191, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.03);
-            position: relative;
-            transition: transform 10s cubic-bezier(0.17, 0.67, 0.05, 1);
-        }
-
-        .wheel-segment {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            transform-origin: center center;
-        }
-
-        .wheel-label {
-            margin-top: 1.5rem;
-            padding: 0.5rem 0.75rem;
-            background: rgba(0, 191, 255, 0.1);
-            border-radius: 0.25rem;
-            font-size: 0.875rem;
-            font-weight: bold;
-            color: hsl(193, 100%, 50%);
-        }
-
-        .wheel-label.lose {
-            background: rgba(239, 68, 68, 0.1);
-            color: hsl(0, 84%, 60%);
-        }
-
-        .wheel-label.winner {
-            background: rgba(0, 191, 255, 0.3);
-            animation: pulse 1s infinite;
-            transform: scale(1.2);
-        }
-
-        .wheel-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            z-index: 10;
-        }
-
-        .wheel-pointer {
-            position: absolute;
-            top: 50%;
-            right: -25px;
-            transform: translateY(-50%);
-            width: 0;
-            height: 0;
-            border-top: 25px solid transparent;
-            border-bottom: 25px solid transparent;
-            border-left: 35px solid hsl(193, 100%, 50%);
-            z-index: 20;
-            filter: drop-shadow(0 0 15px rgba(0, 191, 255, 0.9));
-        }
-
-        .result-box {
-            text-align: center;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            margin-top: 1rem;
-            font-weight: bold;
-        }
-
-        .result-win {
-            color: hsl(193, 100%, 50%);
-            animation: pulse 2s infinite;
-        }
-
-        .result-lose {
-            color: hsl(0, 84%, 60%);
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .back-btn {
-            background: transparent;
-            border: 1px solid rgba(0, 191, 255, 0.2);
-            color: hsl(193, 100%, 50%);
-            margin-bottom: 1rem;
-        }
-
-        .back-btn:hover {
-            background: rgba(0, 191, 255, 0.1);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.25rem;
-            color: hsl(193, 100%, 88%);
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-    </style>
+  /* responsive small */
+  @media (max-width:980px){
+    .app{grid-template-columns: 1fr; padding-bottom:40px}
+    .panel{order:2}
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div>
-                <div class="neon-text">🎰 Neon Blue Arcade</div>
-                <div style="font-size: 0.875rem; margin-top: 0.25rem;">Player: <span id="playerNameDisplay">Guest</span></div>
-            </div>
-            <div class="coins">💰 <span id="coinsDisplay">2000</span> coins</div>
-            <button onclick="resetCoins()">Reset Coins</button>
+  <div class="app" id="app">
+    <!-- LEFT PANEL -->
+    <aside class="panel" aria-label="menu">
+      <div class="brand">
+        <div class="logo">🎮</div>
+        <div>
+          <h1>Neon Blue Arcade</h1>
+          <p>6 mini-casino games • Leaderboard • Synth audio</p>
         </div>
+      </div>
 
-        <!-- Menu View -->
-        <div id="menuView">
-            <div class="game-grid">
-                <div class="game-card" onclick="selectGame('wheel')">
-                    <div class="game-icon">🎡</div>
-                    <div class="game-title">Spin the Wheel</div>
-                    <p style="font-size: 0.875rem; color: hsl(193, 40%, 65%);">Test your luck with random multipliers</p>
-                </div>
-                <div class="game-card" onclick="selectGame('slot')">
-                    <div class="game-icon">🎰</div>
-                    <div class="game-title">Slot Machine</div>
-                    <p style="font-size: 0.875rem; color: hsl(193, 40%, 65%);">Match symbols to win big</p>
-                </div>
-                <div class="game-card" onclick="selectGame('dice')">
-                    <div class="game-icon">🎲</div>
-                    <div class="game-title">Dice Roll</div>
-                    <p style="font-size: 0.875rem; color: hsl(193, 40%, 65%);">Roll the dice for fortune</p>
-                </div>
-                <div class="game-card" onclick="selectGame('cards')">
-                    <div class="game-icon">🃏</div>
-                    <div class="game-title">Card Draw</div>
-                    <p style="font-size: 0.875rem; color: hsl(193, 40%, 65%);">Draw high cards to win</p>
-                </div>
-                <div class="game-card" onclick="selectGame('randomizer')">
-                    <div class="game-icon">🔀</div>
-                    <div class="game-title">50/50 Randomizer</div>
-                    <p style="font-size: 0.875rem; color: hsl(193, 40%, 65%);">Double or nothing</p>
-                </div>
-                <div class="game-card" onclick="selectGame('highlow')">
-                    <div class="game-icon">📊</div>
-                    <div class="game-title">High or Low</div>
-                    <p style="font-size: 0.875rem; color: hsl(193, 40%, 65%);">Guess the next number</p>
-                </div>
-            </div>
+      <div class="balance">
+        <div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6)">Player</div>
+          <div id="playerDisplay" style="font-size:16px;font-weight:800;color:var(--neon-strong)">Guest</div>
         </div>
+        <div style="text-align:right">
+          <div style="font-size:12px;color:rgba(255,255,255,0.6)">Coins</div>
+          <div class="coins">💰 <span id="coins">2000</span></div>
+        </div>
+      </div>
 
-        <!-- Wheel Game View -->
-        <div id="wheelView" class="game-view hidden">
-            <button class="back-btn" onclick="backToMenu()">← Back to Games</button>
-            <h2 class="neon-text" style="margin-bottom: 1rem;">🎡 Spin the Wheel</h2>
-            <p style="margin-bottom: 2rem; color: hsl(193, 40%, 65%);">Segments shuffle each spin! Land on a multiplier to win.</p>
-            
-            <div class="wheel-container">
-                <div class="wheel-wrapper">
-                    <div id="wheel" class="wheel"></div>
-                    <div class="wheel-center">🎰</div>
-                    <div class="wheel-pointer"></div>
-                </div>
-                
-                <div style="max-width: 400px; width: 100%;">
-                    <div class="form-group">
-                        <label for="wheelBet">Bet Amount</label>
-                        <input type="number" id="wheelBet" value="10" min="1">
-                    </div>
-                    <button onclick="spinWheel()" id="spinBtn" style="width: 100%; font-size: 1.125rem; padding: 1rem;">Spin Wheel</button>
-                    <div id="wheelResult" class="result-box hidden"></div>
-                    <p style="margin-top: 1rem; font-size: 0.75rem; color: hsl(193, 40%, 65%); background: rgba(255, 255, 255, 0.02); padding: 0.75rem; border-radius: 0.5rem;">
-                        <strong>Payouts:</strong> Segments include 5× Lose, 1.5x, 2.0x, 1.2x, 1.7x (shuffled each spin)
-                    </p>
-                </div>
-            </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button class="primary" id="btnSoundToggle">🔊 Music: On</button>
+        <button class="ghost" id="btnReset">Reset</button>
+      </div>
+
+      <div style="margin-bottom:8px;color:rgba(255,255,255,0.8);font-size:13px">Games</div>
+      <div class="games-list" id="gamesList">
+        <!-- items injected by JS -->
+      </div>
+
+      <div class="leaderboard" aria-label="leaderboard">
+        <div class="leader-top">
+          <strong>🏆 Leaderboard</strong>
+          <div style="display:flex;gap:6px">
+            <button class="ghost" id="btnRefreshLB">Refresh</button>
+            <button class="ghost" id="btnSubmitLB">Submit</button>
+          </div>
         </div>
+        <div class="lb-list" id="lbList">
+          <!-- rows -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT / CONTENT -->
+    <main class="content">
+      <div class="content-header">
+        <div>
+          <h2 id="viewTitle">Welcome</h2>
+          <div class="subtle" id="viewSub">Pick a game to start — good luck!</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="ghost" id="btnBack" style="display:none">← Back</button>
+          <button class="ghost" id="btnName">Change Name</button>
+        </div>
+      </div>
+
+      <div class="game-area">
+        <!-- game content injected -->
+        <div class="card" id="mainCard">
+          <h3 style="margin:0 0 10px 0;color:var(--neon-strong)">Welcome to Neon Blue Arcade</h3>
+          <p style="margin:0 0 12px 0;color:rgba(255,255,255,0.6)">Choose a game on the left. Your coins persist locally and sync with the leaderboard.</p>
+          <div style="display:flex;gap:8px">
+            <button class="primary" id="startWheel">Spin Wheel</button>
+            <button class="primary" id="startSlots">Play Slots</button>
+            <button class="primary" id="startDice">Roll Dice</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+/* -----------------------
+   App: State + utilities
+   ----------------------- */
+const API_BASE = 'https://68f3dd3efd14a9fcc42a1184.mockapi.io/leaderboard';
+let coins = parseInt(localStorage.getItem('neon_coins') || '2000', 10);
+let playerName = localStorage.getItem('neon_player') || '';
+let playerEntryId = localStorage.getItem('neon_player_id') || null;
+let soundOn = (localStorage.getItem('neon_sound') || '1') === '1';
+
+const el = id => document.getElementById(id);
+const setText = (id, v) => el(id).textContent = v;
+
+function saveLocal() {
+  localStorage.setItem('neon_coins', Math.max(0, Math.floor(coins)).toString());
+  localStorage.setItem('neon_player', playerName);
+  if(playerEntryId) localStorage.setItem('neon_player_id', playerEntryId);
+}
+
+/* ------------- audio: tiny synth + fx ------------- */
+let audioCtx=null;
+let musicNode=null;
+function ensureAudio(){
+  if(audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+function playTone(freq=440, length=0.12, type='sine', gain=0.06){
+  if(!soundOn) return;
+  ensureAudio();
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type;
+  o.frequency.value = freq;
+  g.gain.value = gain;
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start();
+  g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + length);
+  setTimeout(()=>{try{o.stop()}catch(e){}}, length*1000 + 20);
+}
+function playClick(){ playTone(880,0.06,'square',0.04); }
+function playWin(){ playTone(1200,0.22,'sine',0.08); playTone(900,0.28,'triangle',0.06); }
+function playLose(){ playTone(220,0.16,'sawtooth',0.06); }
+
+let musicPlaying=false;
+function startMusic(){
+  if(!soundOn) return;
+  ensureAudio();
+  if(musicNode) return;
+  const t = audioCtx;
+  const master = t.createGain(); master.gain.value=0.03; master.connect(t.destination);
+  // simple arpeggio / pad
+  const osc1 = t.createOscillator(); osc1.type='sine'; osc1.frequency.value=110;
+  const osc2 = t.createOscillator(); osc2.type='sine'; osc2.frequency.value=220;
+  const g1 = t.createGain(); g1.gain.value=0.6;
+  osc1.connect(g1); osc2.connect(g1); g1.connect(master);
+  osc1.start(); osc2.start();
+  musicNode = {osc1,osc2,g1,master};
+  musicPlaying=true;
+}
+function stopMusic(){
+  if(!musicNode) return;
+  try{musicNode.osc1.stop();musicNode.osc2.stop();}catch(e){}
+  musicNode=null; musicPlaying=false;
+}
+
+/* ---------------- UI Init ---------------- */
+const games = [
+  {id:'wheel', title:'Spin the Wheel', icon:'🎡', desc:'Spin for multipliers and losses'},
+  {id:'slot', title:'Slot Machine', icon:'🎰', desc:'Match symbols to win big'},
+  {id:'dice', title:'Dice Roll', icon:'🎲', desc:'Roll two dice; total ≥6 wins'},
+  {id:'cards', title:'Cards (Pick 3)', icon:'🃏', desc:'Pick 3 cards — high risk reward'},
+  {id:'randomizer', title:'Randomizer', icon:'🔀', desc:'50/50 double or nothing'},
+  {id:'highlow', title:'High or Low', icon:'📊', desc:'Guess number 1–100'}
+];
+
+function renderGamesList(){
+  const container = el('gamesList');
+  container.innerHTML = '';
+  games.forEach(g=>{
+    const d = document.createElement('div');
+    d.className = 'game-item';
+    d.onclick = ()=>selectGame(g.id);
+    d.title = g.title;
+    d.innerHTML = `
+      <div class="gi-icon">${g.icon}</div>
+      <div style="flex:1">
+        <div class="gi-title">${g.title}</div>
+        <div class="gi-desc">${g.desc}</div>
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.6)">Play →</div>
+    `;
+    container.appendChild(d);
+  });
+}
+
+/* ------------ Leaderboard (GET/POST/PUT) ------------ */
+async function fetchLeaderboard(){
+  try{
+    const res = await fetch(API_BASE);
+    if(!res.ok) throw new Error('Failed LB');
+    const data = await res.json();
+    // sort desc by coins
+    data.sort((a,b)=> (b.coins||0) - (a.coins||0));
+    return data;
+  }catch(e){
+    console.warn('LB fetch err',e);
+    return [];
+  }
+}
+
+async function submitOrUpdatePlayerRecord(){
+  if(!playerName) return;
+  // check existing by name
+  try{
+    const all = await fetchLeaderboard();
+    const existing = all.find(r => r.name && r.name.toLowerCase() === playerName.toLowerCase());
+    if(existing){
+      // update via PUT
+      playerEntryId = existing.id;
+      await fetch(`${API_BASE}/${existing.id}`, {
+        method:'PUT',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({name: playerName, coins: Math.max(0, Math.floor(coins))})
+      });
+    } else {
+      // create
+      const res = await fetch(API_BASE, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({name: playerName, coins: Math.max(0, Math.floor(coins))})
+      });
+      const json = await res.json();
+      if(json && json.id) playerEntryId = json.id;
+    }
+    saveLocal();
+  }catch(e){
+    console.warn('submit lb err', e);
+  }
+}
+
+let saveTimeout = null;
+function debounceSaveLeaderboard(){
+  if(saveTimeout) clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(()=>{ submitOrUpdatePlayerRecord(); refreshLeaderboard(); }, 1200);
+}
+
+/* ------------- Leaderboard UI ------------- */
+async function refreshLeaderboard(){
+  const data = await fetchLeaderboard();
+  const top = data.slice(0,10);
+  const container = el('lbList');
+  container.innerHTML = '';
+  top.forEach((r, idx) => {
+    const row = document.createElement('div');
+    row.className = 'lb-row';
+    row.innerHTML = `<div style="display:flex;gap:8px;align-items:center"><strong style="color:var(--neon-strong)">${idx+1}.</strong><div>${r.name}</div></div><div>💰 ${r.coins||0}</div>`;
+    container.appendChild(row);
+  });
+}
+
+/* -------------- Name / onboarding -------------- */
+async function promptForNameIfNeeded(){
+  if(playerName) {
+    el('playerDisplay').textContent = playerName;
+    return;
+  }
+  // modal-like prompt using prompt(); could be replaced with a nicer modal
+  let name = '';
+  while(!name || name.trim().length < 2){
+    name = prompt('Enter your player name (min 2 characters) — this will appear on the leaderboard:', '');
+    if(name === null) { name = 'Guest'; break; }
+    name = name.trim();
+  }
+  playerName = name || 'Guest';
+  el('playerDisplay').textContent = playerName;
+  saveLocal();
+  // create or fetch existing record
+  await submitOrUpdatePlayerRecord();
+  refreshLeaderboard();
+}
+
+/* ------------- Coins helpers ------------- */
+function setCoins(v, {silent=false} = {}){
+  coins = Math.max(0, Math.floor(v));
+  setText('coins', coins);
+  saveLocal();
+  if(!silent) {
+    debounceSaveLeaderboard();
+  }
+}
+
+/* ------------- Start / bind UI ------------- */
+function initUI(){
+  renderGamesList();
+  setText('coins', coins);
+  el('playerDisplay').textContent = playerName || 'Guest';
+
+  // main quick action buttons
+  el('startWheel').onclick = ()=>selectGame('wheel');
+  el('startSlots').onclick = ()=>selectGame('slot');
+  el('startDice').onclick = ()=>selectGame('dice');
+
+  el('btnReset').onclick = ()=>{
+    if(confirm('Reset coins to 2000 and clear saved player?')){
+      coins = 2000; playerName = ''; playerEntryId = null;
+      saveLocal();
+      setText('coins', coins);
+      el('playerDisplay').textContent = 'Guest';
+      refreshLeaderboard();
+      alert('Reset done.');
+    }
+  };
+
+  el('btnSoundToggle').onclick = ()=>{
+    soundOn = !soundOn;
+    localStorage.setItem('neon_sound', soundOn ? '1' : '0');
+    el('btnSoundToggle').textContent = `🔊 Music: ${soundOn ? 'On' : 'Off'}`;
+    if(soundOn) startMusic(); else stopMusic();
+  };
+
+  el('btnSubmitLB').onclick = async ()=>{
+    await submitOrUpdatePlayerRecord();
+    alert('Score submitted/updated.');
+    refreshLeaderboard();
+  };
+  el('btnRefreshLB').onclick = refreshLeaderboard;
+  el('btnName').onclick = async ()=>{
+    const n = prompt('Change player name:', playerName || '');
+    if(n && n.trim().length>=2){
+      playerName = n.trim();
+      el('playerDisplay').textContent = playerName;
+      saveLocal();
+      // submit/update
+      await submitOrUpdatePlayerRecord();
+      refreshLeaderboard();
+      alert('Name updated.');
+    }
+  };
+
+  // back button
+  el('btnBack').onclick = ()=>showWelcome();
+
+  // launch music if enabled
+  if(soundOn) {
+    el('btnSoundToggle').textContent = '🔊 Music: On';
+    startMusic();
+  } else el('btnSoundToggle').textContent = '🔊 Music: Off';
+
+  // refresh LB initially
+  refreshLeaderboard();
+
+  // onboarding name
+  promptForNameIfNeeded();
+}
+
+/* ---------------------- Game views ---------------------- */
+function showWelcome(){
+  el('viewTitle').textContent = 'Welcome';
+  el('viewSub').textContent = 'Pick a game to start — good luck!';
+  el('btnBack').style.display = 'none';
+  const main = el('mainCard');
+  main.innerHTML = `
+    <h3 style="margin:0 0 10px 0;color:var(--neon-strong)">Welcome to Neon Blue Arcade</h3>
+    <p style="margin:0 0 12px 0;color:rgba(255,255,255,0.6)">Choose a game on the left. Your coins persist locally and sync with the leaderboard.</p>
+    <div style="display:flex;gap:8px">
+      <button class="primary" id="wbtn">Spin Wheel</button>
+      <button class="primary" id="sbtn">Play Slots</button>
+      <button class="primary" id="dbtn">Roll Dice</button>
+      <button class="primary" id="cbtn">Cards Pick 3</button>
     </div>
+  `;
+  el('wbtn').onclick = ()=>selectGame('wheel');
+  el('sbtn').onclick = ()=>selectGame('slot');
+  el('dbtn').onclick = ()=>selectGame('dice');
+  el('cbtn').onclick = ()=>selectGame('cards');
+}
 
-    <script>
-        // Game State
-        let coins = parseInt(localStorage.getItem('neon_coins') || '2000');
-        let playerName = localStorage.getItem('neon_player') || 'Guest';
-        let currentView = 'menu';
-        let isSpinning = false;
+function selectGame(id){
+  playClick();
+  el('btnBack').style.display = 'inline-block';
+  const vtitle = games.find(g=>g.id===id)?.title || 'Game';
+  el('viewTitle').textContent = vtitle;
+  el('viewSub').textContent = games.find(g=>g.id===id)?.desc || '';
+  const main = el('mainCard');
+  main.innerHTML = '';
+  if(id === 'wheel') return renderWheel(main);
+  if(id === 'slot') return renderSlots(main);
+  if(id === 'dice') return renderDice(main);
+  if(id === 'cards') return renderCards(main);
+  if(id === 'randomizer') return renderRandomizer(main);
+  if(id === 'highlow') return renderHighLow(main);
+  main.innerHTML = '<div>Coming soon</div>';
+}
 
-        // Wheel segments
-        const baseSegments = ['Lose', 'Lose', 'Lose', 'Lose', 'Lose', '1.5x', '2.0x', '1.2x', '1.7x'];
-        let currentSegments = [...baseSegments];
+/* ---------------------- Wheel ---------------------- */
+const baseWheelSegments = ['Lose','Lose','Lose','Lose','Lose','1.5x','2.0x','1.2x','1.7x'];
 
-        // Initialize
-        updateDisplay();
+function renderWheel(container){
+  container.innerHTML = `
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:center">
+      <div class="wheel-wrapper">
+        <div class="wheel card" id="wheelEl" style="--size:320px"></div>
+        <div class="center-badge">🎰</div>
+        <div class="pointer"></div>
+      </div>
+      <div style="max-width:420px;width:100%">
+        <div><label>Bet</label><input id="wheelBet" type="number" min="1" value="10" /></div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button class="primary" id="spinBtn">Spin Wheel</button>
+          <button class="ghost" id="shuffleWheel">Shuffle</button>
+        </div>
+        <div id="wheelResult" class="result-box hidden" style="margin-top:12px"></div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-top:8px">Payouts: 5× Lose, 1.5x, 2.0x, 1.2x, 1.7x (shuffled each spin)</p>
+      </div>
+    </div>
+  `;
+  // build wheel segments
+  let segments = shuffle([...baseWheelSegments]);
+  const wheel = el('wheelEl');
+  function paintWheel(){
+    wheel.innerHTML = '';
+    const n = segments.length;
+    const size = 320;
+    segments.forEach((s,i)=>{
+      const seg = document.createElement('div');
+      seg.className='seg';
+      const angle = (360 / n) * i;
+      seg.style.transform = `rotate(${angle}deg) translate(-50%,-100%)`;
+      const label = document.createElement('div');
+      label.className='label';
+      label.id = `wseg-${i}`;
+      label.textContent = s;
+      if(s !== 'Lose') label.style.background = 'linear-gradient(90deg,#00bfff,#66e)';
+      seg.appendChild(label);
+      wheel.appendChild(seg);
+    });
+  }
+  paintWheel();
 
-        function updateDisplay() {
-            document.getElementById('coinsDisplay').textContent = Math.max(0, Math.floor(coins));
-            document.getElementById('playerNameDisplay').textContent = playerName;
-            localStorage.setItem('neon_coins', Math.max(0, Math.floor(coins)).toString());
+  // spinning
+  let spinning=false;
+  el('shuffleWheel').onclick = ()=>{ segments = shuffle([...baseWheelSegments]); paintWheel(); playClick(); };
+  el('spinBtn').onclick = ()=>{
+    if(spinning) return;
+    const bet = parseInt(el('wheelBet').value||'0',10);
+    if(!bet || bet<1){ alert('Enter valid bet'); return; }
+    if(bet > coins){ alert('Not enough coins'); return; }
+    // deduct
+    setCoins(coins - bet);
+    playClick();
+    spinning = true;
+    el('spinBtn').disabled = true;
+    el('wheelResult').classList.add('hidden');
+
+    // pick index
+    const winIndex = Math.floor(Math.random()*segments.length);
+    const n = segments.length;
+    const degPer = 360/n;
+    // pointer at right (0deg), to align label at pointer:
+    const target = 90 - (winIndex * degPer) + degPer/2; // center label
+    const spins = 12;
+    const total = 360*spins + target;
+    wheel.style.transition = 'transform 5s cubic-bezier(.17,.67,.05,1)';
+    wheel.style.transform = `rotate(${total}deg)`;
+    setTimeout(()=>{
+      // show
+      const seg = segments[winIndex];
+      if(seg === 'Lose'){
+        el('wheelResult').className = 'result-box lose';
+        el('wheelResult').textContent = `Landed on Lose — Lost ${bet} coins.`;
+        playLose();
+      } else {
+        const mult = parseFloat(seg.replace('x',''));
+        const winAmt = Math.round(bet * mult);
+        setCoins(coins + winAmt);
+        el('wheelResult').className = 'result-box win';
+        el('wheelResult').textContent = `Landed on ${seg} — Won ${winAmt} coins!`;
+        playWin();
+      }
+      el('wheelResult').classList.remove('hidden');
+      spinning=false;
+      el('spinBtn').disabled = false;
+      // shuffle next time
+      segments = shuffle([...baseWheelSegments]);
+      paintWheel();
+      // reset transform for next run (without visible jump)
+      setTimeout(()=>{ wheel.style.transition='none'; wheel.style.transform='rotate(0deg)'; }, 60);
+    }, 5200);
+  };
+}
+
+/* ---------------- Slots ---------------- */
+const slotSymbols = ['7','🍒','🏆','💵'];
+function renderSlots(container){
+  container.innerHTML = `
+    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;justify-content:center">
+      <div style="display:flex;gap:10px">
+        <div class="card" style="width:92px;height:92px;display:flex;align-items:center;justify-content:center;font-size:32px" id="reel0">—</div>
+        <div class="card" style="width:92px;height:92px;display:flex;align-items:center;justify-content:center;font-size:32px" id="reel1">—</div>
+        <div class="card" style="width:92px;height:92px;display:flex;align-items:center;justify-content:center;font-size:32px" id="reel2">—</div>
+      </div>
+      <div style="max-width:420px;width:100%">
+        <div><label>Bet</label><input id="slotBet" type="number" min="1" value="10"></div>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button class="primary" id="spinSlots">Spin Slots</button>
+          <button class="ghost" id="resetSlots">Reset</button>
+        </div>
+        <div id="slotResult" class="result-box" style="margin-top:10px"></div>
+        <div style="margin-top:8px;font-size:13px;color:rgba(255,255,255,0.6)">
+          <div><strong>3×7</strong>=2.5x | <strong>3×🍒/🏆</strong>=2.0x | <strong>3×💵</strong>=+1000 | 2×💵 = +100
+        </div>
+      </div>
+    </div>
+  `;
+  const reelsEl = [el('reel0'), el('reel1'), el('reel2')];
+  const resultEl = el('slotResult');
+  el('spinSlots').onclick = async ()=>{
+    const bet = parseInt(el('slotBet').value||'0',10);
+    if(!bet || bet<1){ alert('Enter valid bet'); return; }
+    if(bet > coins){ alert('Not enough coins'); return; }
+    setCoins(coins - bet);
+    playClick();
+    // spin visuals
+    reelsEl.forEach(r => r.textContent = '❯');
+    let results = [];
+    setTimeout(()=>{ results[0]=rand(slotSymbols); reelsEl[0].textContent=results[0]; }, 200);
+    setTimeout(()=>{ results[1]=rand(slotSymbols); reelsEl[1].textContent=results[1]; }, 420);
+    setTimeout(()=>{ results[2]=rand(slotSymbols); reelsEl[2].textContent=results[2]; evaluateSlot(results, bet); }, 680);
+  };
+  function evaluateSlot(results, bet){
+    const counts = {};
+    results.forEach(s => counts[s] = (counts[s]||0)+1);
+    if(counts['💵']===3){
+      setCoins(coins + 1000);
+      resultEl.textContent = '🎉 Three 💵! +1000 coins';
+      playWin(); return;
+    }
+    if(counts['💵']===2){
+      setCoins(coins + 100);
+      resultEl.textContent = 'Two 💵! +100 coins';
+      playWin(); return;
+    }
+    for(const symbol of ['7','🍒','🏆']){
+      if(counts[symbol]===3){
+        const multiplier = symbol==='7' ? 2.5 : 2.0;
+        const winAmount = Math.round(bet * multiplier);
+        setCoins(coins + winAmount);
+        resultEl.textContent = `3×${symbol} → Won ${winAmount} coins (${multiplier}x)`;
+        playWin(); return;
+      }
+    }
+    for(const symbol of ['7','🍒','🏆']){
+      if(counts[symbol]===2){
+        const multiplier = symbol==='7' ? 1.5 : 1.3;
+        const winAmount = Math.round(bet * multiplier);
+        setCoins(coins + winAmount);
+        resultEl.textContent = `2×${symbol} → Won ${winAmount} coins (${multiplier}x)`;
+        playWin(); return;
+      }
+    }
+    resultEl.textContent = 'No win';
+    playLose();
+  }
+}
+
+/* ---------------- Dice ---------------- */
+function renderDice(container){
+  container.innerHTML = `
+    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;justify-content:center">
+      <div style="display:flex;gap:12px">
+        <div class="card" id="die0" style="width:100px;height:100px;display:flex;align-items:center;justify-content:center;font-size:36px">1</div>
+        <div class="card" id="die1" style="width:100px;height:100px;display:flex;align-items:center;justify-content:center;font-size:36px">1</div>
+      </div>
+      <div style="max-width:420px;width:100%">
+        <div><label>Bet</label><input id="diceBet" type="number" min="1" value="10" /></div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button class="primary" id="rollDice">Roll Dice</button>
+        </div>
+        <div id="diceResult" class="result-box" style="margin-top:12px"></div>
+        <div style="margin-top:8px;font-size:13px;color:rgba(255,255,255,0.6)">
+          <strong>Rules</strong>: Total must be ≥6 to win. Multiplier based on higher die.
+        </div>
+      </div>
+    </div>
+  `;
+  const d0 = el('die0'), d1 = el('die1'), r = el('diceResult');
+  el('rollDice').onclick = ()=>{
+    const bet = parseInt(el('diceBet').value||'0',10);
+    if(!bet || bet<1){ alert('Enter valid bet'); return; }
+    if(bet > coins){ alert('Not enough coins'); return; }
+    setCoins(coins - bet);
+    playClick();
+    // rolling animation
+    let interval = setInterval(()=>{ d0.textContent = (Math.floor(Math.random()*6)+1); d1.textContent = (Math.floor(Math.random()*6)+1); }, 80);
+    setTimeout(()=>{
+      clearInterval(interval);
+      const d_1 = Math.floor(Math.random()*6)+1;
+      const d_2 = Math.floor(Math.random()*6)+1;
+      d0.textContent = d_1; d1.textContent = d_2;
+      const total = d_1 + d_2;
+      if(total < 6){
+        r.className='result-box lose';
+        r.textContent = `Rolled ${d_1} + ${d_2} = ${total} — You lost!`;
+        playLose();
+      } else {
+        const maxDie = Math.max(d_1, d_2);
+        const multiplier = 0.9 + ((maxDie - 1) / 5) * 1.6;
+        const winAmount = Math.round(bet * multiplier);
+        setCoins(coins + winAmount);
+        r.className='result-box win';
+        r.textContent = `Rolled ${d_1} + ${d_2} = ${total} — Won ${winAmount} coins (${multiplier.toFixed(2)}x)`;
+        playWin();
+      }
+    }, 1000);
+  };
+}
+
+/* ---------------- Cards: Pick 3 ---------------- */
+function renderCards(container){
+  container.innerHTML = `
+    <div style="max-width:760px;margin:0 auto">
+      <div style="margin-bottom:10px"><strong style="color:var(--neon-strong)">🃏 Cards (Pick 3)</strong><div style="font-size:13px;color:rgba(255,255,255,0.6)">Pick exactly 3 cards from the grid. 60% win chance.</div></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px" id="cardsGrid"></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="cardsBet" type="number" min="1" value="10" />
+        <button class="primary" id="pickBtn">Pick Selected (0/3)</button>
+        <button class="ghost" id="shuffleCards">Shuffle</button>
+      </div>
+      <div id="cardsResult" class="result-box" style="margin-top:10px"></div>
+      <div style="margin-top:8px;font-size:13px;color:rgba(255,255,255,0.6)">Risk: 60% to win 1.5x–5.0x. 40% to lose 25–50% of ALL coins!</div>
+    </div>
+  `;
+  const grid = el('cardsGrid');
+  const pickBtn = el('pickBtn');
+  const res = el('cardsResult');
+  let selected = [];
+  function buildGrid(){
+    grid.innerHTML = '';
+    for(let i=0;i<9;i++){
+      const c = document.createElement('div');
+      c.className = 'card';
+      c.style.height='72px'; c.style.display='flex'; c.style.alignItems='center'; c.style.justifyContent='center'; c.style.fontSize='28px';
+      c.textContent = '?';
+      c.onclick = ()=>{
+        if(selected.includes(i)){
+          selected = selected.filter(x=>x!==i);
+          c.style.border = '1px solid rgba(0,191,255,0.04)';
+        } else if(selected.length < 3){
+          selected.push(i);
+          c.style.border = '2px solid rgba(0,191,255,0.16)';
         }
+        pickBtn.textContent = `Pick Selected (${selected.length}/3)`;
+      };
+      grid.appendChild(c);
+    }
+  }
+  buildGrid();
+  el('shuffleCards').onclick = ()=>{ selected=[]; buildGrid(); res.textContent=''; playClick(); pickBtn.textContent='Pick Selected (0/3)'; };
+  pickBtn.onclick = ()=>{
+    const bet = parseInt(el('cardsBet').value||'0',10);
+    if(!bet||bet<1){ alert('Enter valid bet'); return; }
+    if(bet>coins){ alert('Not enough coins'); return; }
+    if(selected.length!==3){ alert('Select exactly 3 cards'); return; }
+    setCoins(coins - bet);
+    res.textContent=''; playClick();
+    // win chance 60%
+    const isWin = Math.random()<0.6;
+    if(isWin){
+      const mult = 1.5 + Math.random() * (5.0 - 1.5);
+      const winAmt = Math.round(bet * mult);
+      setCoins(coins + winAmt);
+      res.className='result-box win';
+      res.textContent = `🎉 Nice! ${mult.toFixed(2)}x → +${winAmt} coins`;
+      playWin();
+    } else {
+      const currentCoins = coins;
+      const lossPercent = 25 + Math.random()*25;
+      const lossAmount = Math.round(currentCoins * (lossPercent / 100));
+      setCoins(Math.max(0, currentCoins - lossAmount));
+      res.className='result-box lose';
+      res.textContent = `💥 Bad flip — lost ${lossPercent.toFixed(0)}% of coins (−${lossAmount})`;
+      playLose();
+    }
+    // reset selection
+    selected = [];
+    buildGrid();
+    pickBtn.textContent = 'Pick Selected (0/3)';
+  };
+}
 
-        function resetCoins() {
-            coins = 2000;
-            updateDisplay();
-            showToast('Coins reset to 2000!');
-        }
+/* ---------------- Randomizer 50/50 ---------------- */
+function renderRandomizer(container){
+  container.innerHTML = `
+    <div style="max-width:520px">
+      <h3 style="margin-top:0;color:var(--neon-strong)">🔀 Randomizer</h3>
+      <div style="margin-bottom:8px;color:rgba(255,255,255,0.6)">50/50 chance — win random multiplier 1.1x–2.5x</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="randBet" type="number" min="1" value="10" />
+        <button class="primary" id="randBtn">Randomize</button>
+      </div>
+      <div id="randResult" class="result-box" style="margin-top:10px"></div>
+    </div>
+  `;
+  el('randBtn').onclick = ()=>{
+    const bet = parseInt(el('randBet').value||'0',10);
+    if(!bet||bet<1){ alert('Enter valid bet'); return; }
+    if(bet>coins){ alert('Not enough coins'); return; }
+    setCoins(coins - bet);
+    playClick();
+    const isWin = Math.random() >= 0.5;
+    if(!isWin){
+      el('randResult').className='result-box lose';
+      el('randResult').textContent = `Lost ${bet} coins`;
+      playLose();
+    } else {
+      const mult = 1.1 + Math.random()*(2.5 - 1.1);
+      const winAmt = Math.round(bet * mult);
+      setCoins(coins + winAmt);
+      el('randResult').className='result-box win';
+      el('randResult').textContent = `Won ${winAmt} coins (${mult.toFixed(2)}x)`;
+      playWin();
+    }
+  };
+}
 
-        function selectGame(game) {
-            currentView = game;
-            document.getElementById('menuView').classList.add('hidden');
-            document.getElementById('wheelView').classList.add('hidden');
-            
-            if (game === 'wheel') {
-                document.getElementById('wheelView').classList.remove('hidden');
-                initWheel();
-            } else {
-                showToast('Game coming soon!');
-                backToMenu();
-            }
-        }
+/* ---------------- High or Low ---------------- */
+function renderHighLow(container){
+  container.innerHTML = `
+    <div style="max-width:520px">
+      <h3 style="margin-top:0;color:var(--neon-strong)">🎯 High or Low</h3>
+      <div style="margin-bottom:8px;color:rgba(255,255,255,0.6)">Guess if next number (1–100) is higher or lower than 50. 50 = house wins.</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="hlBet" type="number" min="1" value="10" />
+        <button class="primary" id="hlHigh">Higher</button>
+        <button class="ghost" id="hlLow">Lower</button>
+      </div>
+      <div id="hlResult" class="result-box" style="margin-top:10px"></div>
+    </div>
+  `;
+  const res = el('hlResult');
+  function handleGuess(isHigher){
+    const bet = parseInt(el('hlBet').value||'0',10);
+    if(!bet||bet<1){ alert('Enter valid bet'); return; }
+    if(bet>coins){ alert('Not enough coins'); return; }
+    setCoins(coins - bet);
+    playClick();
+    const num = Math.floor(Math.random()*100)+1;
+    if(num === 50){
+      res.className='result-box lose';
+      res.textContent = `Number was 50 — House wins!`;
+      playLose();
+      return;
+    }
+    const correct = isHigher ? (num>50) : (num<50);
+    if(!correct){
+      res.className='result-box lose';
+      res.textContent = `Number was ${num} — Wrong guess!`;
+      playLose();
+    } else {
+      const distance = isHigher ? (num - 51) : (50 - num);
+      const multiplier = 1 + (distance / 49) * 3.0;
+      const winAmount = Math.round(bet * multiplier);
+      setCoins(coins + winAmount);
+      res.className='result-box win';
+      res.textContent = `Number was ${num} — Correct! Won ${winAmount} coins (${multiplier.toFixed(2)}x)`;
+      playWin();
+    }
+  }
+  el('hlHigh').onclick = ()=>handleGuess(true);
+  el('hlLow').onclick = ()=>handleGuess(false);
+}
 
-        function backToMenu() {
-            currentView = 'menu';
-            document.getElementById('menuView').classList.remove('hidden');
-            document.getElementById('wheelView').classList.add('hidden');
-        }
+/* ---------------- util funcs ---------------- */
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a; }
+function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-        function showToast(message) {
-            alert(message);
-        }
+/* ---------------- startup ---------------- */
+window.addEventListener('load', async ()=>{
+  initUI();
+  showWelcome();
+  await refreshLeaderboard();
+  // ensure initial save for leaderboard
+  debounceSaveLeaderboard();
+});
 
-        // Shuffle array
-        function shuffleArray(array) {
-            const arr = [...array];
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
+// Save coins whenever window unloads
+window.addEventListener('beforeunload', ()=>{ saveLocal(); stopMusic(); });
 
-        // Initialize wheel
-        function initWheel() {
-            currentSegments = shuffleArray(baseSegments);
-            renderWheel();
-        }
-
-        // Render wheel segments
-        function renderWheel() {
-            const wheel = document.getElementById('wheel');
-            wheel.innerHTML = '';
-            
-            currentSegments.forEach((segment, index) => {
-                const angle = (360 / currentSegments.length) * index;
-                const segmentDiv = document.createElement('div');
-                segmentDiv.className = 'wheel-segment';
-                segmentDiv.style.transform = `rotate(${angle}deg)`;
-                
-                const label = document.createElement('div');
-                label.className = 'wheel-label' + (segment === 'Lose' ? ' lose' : '');
-                label.textContent = segment;
-                label.id = `segment-${index}`;
-                
-                segmentDiv.appendChild(label);
-                wheel.appendChild(segmentDiv);
-            });
-        }
-
-        // Spin the wheel
-        function spinWheel() {
-            if (isSpinning) return;
-            
-            const bet = parseInt(document.getElementById('wheelBet').value);
-            
-            if (!bet || bet <= 0) {
-                showToast('Enter a valid bet!');
-                return;
-            }
-            
-            if (bet > coins) {
-                showToast('Not enough coins!');
-                return;
-            }
-            
-            // Deduct bet
-            coins -= bet;
-            updateDisplay();
-            
-            isSpinning = true;
-            document.getElementById('spinBtn').disabled = true;
-            document.getElementById('wheelResult').classList.add('hidden');
-            
-            // Shuffle segments for new spin
-            currentSegments = shuffleArray(baseSegments);
-            renderWheel();
-            
-            // Pick winning segment
-            const winIndex = Math.floor(Math.random() * currentSegments.length);
-            const winSegment = currentSegments[winIndex];
-            
-            const wheel = document.getElementById('wheel');
-            
-            // Calculate rotation - pointer is on the RIGHT
-            const degreesPerSegment = 360 / currentSegments.length;
-            
-            // Segments are rotated, labels appear at: (rotation - 90 degrees)
-            // Pointer is at 0 degrees (right side)
-            // To align segment's label with pointer: wheel rotation = 90 - (segment rotation)
-            const targetAngle = 90 - (winIndex * degreesPerSegment);
-            
-            // Add many full rotations for longer, faster spin (15 full spins)
-            const totalRotation = 360 * 15 + targetAngle;
-            
-            wheel.style.transform = `rotate(${totalRotation}deg)`;
-            
-            // Wait for spin to complete (10 seconds)
-            setTimeout(() => {
-                // Highlight winner
-                const winnerLabel = document.getElementById(`segment-${winIndex}`);
-                if (winnerLabel) {
-                    winnerLabel.classList.add('winner');
-                }
-                
-                // Evaluate result
-                evaluateWheelResult(winSegment, bet);
-                
-                isSpinning = false;
-                document.getElementById('spinBtn').disabled = false;
-                
-                // Remove winner highlight after 3 seconds
-                setTimeout(() => {
-                    if (winnerLabel) {
-                        winnerLabel.classList.remove('winner');
-                    }
-                }, 3000);
-            }, 10000);
-        }
-
-        function evaluateWheelResult(segment, bet) {
-            const resultDiv = document.getElementById('wheelResult');
-            resultDiv.classList.remove('hidden');
-            
-            if (segment === 'Lose') {
-                resultDiv.className = 'result-box result-lose';
-                resultDiv.textContent = `Landed on: ${segment} — Lost ${bet} coins`;
-                showToast('You lost!');
-            } else {
-                const multiplier = parseFloat(segment.replace('x', ''));
-                const winAmount = Math.round(bet * multiplier);
-                coins += winAmount;
-                updateDisplay();
-                resultDiv.className = 'result-box result-win';
-                resultDiv.textContent = `Landed on: ${segment} — Won ${winAmount} coins!`;
-                showToast(`You won ${winAmount} coins!`);
-            }
-        }
-    </script>
+</script>
 </body>
 </html>
