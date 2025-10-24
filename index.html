@@ -38,7 +38,7 @@
     width:1100px;
     max-width:calc(100% - 36px);
     display:grid;
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: 1fr 320px;
     gap:18px;
   }
 
@@ -160,7 +160,7 @@
     padding-right:20px;
   }
   .wheel .seg .label{padding:6px 10px;border-radius:6px;background:rgba(0,191,255,0.06);color:var(--neon-strong);font-weight:700;font-size:13px}
-  .pointer{position:absolute;right:-16px;top:50%;transform:translateY(-50%);width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid var(--neon-strong);filter:drop-shadow(0 0 10px rgba(0,191,255,0.8));z-index:10}
+  .pointer{position:absolute;right:-16px;top:50%;transform:translateY(-50%) rotate(180deg);width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid var(--neon-strong);filter:drop-shadow(0 0 10px rgba(0,191,255,0.8));z-index:10}
 
   .center-badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:rgba(10,20,40,0.95);display:flex;align-items:center;justify-content:center;font-size:28px;border:3px solid rgba(0,191,255,0.2);z-index:5}
 
@@ -171,13 +171,41 @@
   /* responsive small */
   @media (max-width:980px){
     .app{grid-template-columns: 1fr; padding-bottom:40px}
-    .panel{order:2}
+    .panel{order:1}
+    .content{order:2}
   }
 </style>
 </head>
 <body>
   <div class="app" id="app">
-    <!-- LEFT PANEL -->
+    <!-- LEFT - CONTENT -->
+    <main class="content">
+      <div class="content-header">
+        <div>
+          <h2 id="viewTitle">Welcome</h2>
+          <div class="subtle" id="viewSub">Pick a game to start — good luck!</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="ghost" id="btnBack" style="display:none">← Back</button>
+          <button class="ghost" id="btnName">Change Name</button>
+        </div>
+      </div>
+
+      <div class="game-area">
+        <!-- game content injected -->
+        <div class="card" id="mainCard">
+          <h3 style="margin:0 0 10px 0;color:var(--neon-strong)">Welcome to Neon Blue Arcade</h3>
+          <p style="margin:0 0 12px 0;color:rgba(255,255,255,0.6)">Choose a game on the right. Your coins persist locally and sync with the leaderboard.</p>
+          <div style="display:flex;gap:8px">
+            <button class="primary" id="startWheel">Spin Wheel</button>
+            <button class="primary" id="startSlots">Play Slots</button>
+            <button class="primary" id="startDice">Roll Dice</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT PANEL -->
     <aside class="panel" aria-label="menu">
       <div class="brand">
         <div class="logo">🎮</div>
@@ -221,33 +249,6 @@
         </div>
       </div>
     </aside>
-
-    <!-- RIGHT / CONTENT -->
-    <main class="content">
-      <div class="content-header">
-        <div>
-          <h2 id="viewTitle">Welcome</h2>
-          <div class="subtle" id="viewSub">Pick a game to start — good luck!</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="ghost" id="btnBack" style="display:none">← Back</button>
-          <button class="ghost" id="btnName">Change Name</button>
-        </div>
-      </div>
-
-      <div class="game-area">
-        <!-- game content injected -->
-        <div class="card" id="mainCard">
-          <h3 style="margin:0 0 10px 0;color:var(--neon-strong)">Welcome to Neon Blue Arcade</h3>
-          <p style="margin:0 0 12px 0;color:rgba(255,255,255,0.6)">Choose a game on the left. Your coins persist locally and sync with the leaderboard.</p>
-          <div style="display:flex;gap:8px">
-            <button class="primary" id="startWheel">Spin Wheel</button>
-            <button class="primary" id="startSlots">Play Slots</button>
-            <button class="primary" id="startDice">Roll Dice</button>
-          </div>
-        </div>
-      </div>
-    </main>
   </div>
 
 <script>
